@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "en-garde",
-	"version": "${version}",
+	"version": "0.0.1",
 	"name": "En Garde",
 	"description": "A vanilla style rework of Minecraft's PVP system.",
 	"authors": [
@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"net.engarde.EnGarde"
+		],
+		"client": [
+			"net.engarde.client.EnGardeClient"
 		],
 		"fabric-datagen": [
 			"net.engarde.EnGardeDataGenerator"
