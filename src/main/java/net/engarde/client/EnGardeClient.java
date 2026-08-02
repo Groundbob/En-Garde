@@ -3,10 +3,13 @@ package net.engarde.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
 import net.engarde.networking.ParryPayload;
+import net.engarde.parry.ParryHudElement;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.ToggleKeyMapping;
 import net.minecraft.resources.Identifier;
@@ -50,6 +53,7 @@ public class EnGardeClient implements ClientModInitializer {
             wasScreenOpen = isScreenOpen;
         });
 
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, EnGarde.id("parry_indicator"), new ParryHudElement());
 
     }
 }
