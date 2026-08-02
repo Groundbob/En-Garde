@@ -37,10 +37,10 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
             case DOUBLE_HANDED_PARRY -> {
                 if (state.mainArm.equals(HumanoidArm.RIGHT)) {
                     this.rightArm.xRot = -1.2f + getHead().xRot/2;
-                    this.rightArm.yRot = -0.6f;
+                    this.rightArm.yRot = -0.6f + getHead().yRot/4;
                 } else {
                     this.rightArm.xRot = -1.2f + getHead().xRot/2;
-                    this.rightArm.yRot = -0.6f;
+                    this.rightArm.yRot = -0.6f + getHead().yRot/4;
                 }
             }
             case null -> {}
@@ -63,10 +63,10 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
             case DOUBLE_HANDED_PARRY -> {
                 if (state.mainArm.equals(HumanoidArm.LEFT)) {
                     this.leftArm.xRot = -1.2f + getHead().xRot/2;
-                    this.leftArm.yRot = 0.6f;
+                    this.leftArm.yRot = 0.6f + getHead().yRot/4;
                 } else {
                     this.leftArm.xRot = -1.2f + getHead().xRot/2;
-                    this.leftArm.yRot = 0.6f;
+                    this.leftArm.yRot = 0.6f + getHead().yRot/4;
                 }
             }
             case null -> {}
