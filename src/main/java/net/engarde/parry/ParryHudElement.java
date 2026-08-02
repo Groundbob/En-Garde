@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class ParryHudElement implements HudElement {
     private static final Identifier PARRY_INDICATOR = EnGarde.id("hud/parry_indicator");
+    private static final Identifier PARRY_CROSS = EnGarde.id("hud/parry_cross");
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
@@ -20,9 +21,12 @@ public class ParryHudElement implements HudElement {
         Options options = minecraft.options;
         if (options.getCameraType().isFirstPerson()) {
             if (player != null && !player.isSpectator()) {
-                int x = graphics.guiWidth() / 2 - 8, y = graphics.guiHeight() / 2 + 6;
+                if (((ParryState) player).engarde$isParrying()) {
+                    int x = graphics.guiWidth() / 2 - 8, y = graphics.guiHeight() / 2 + 6;
 
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PARRY_INDICATOR, x, y, 16, 16, 0xBBffffff);
+                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PARRY_INDICATOR, x, y, 16, 16, 0xAAffffff);
+                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PARRY_CROSS, x, y, 16, 16);
+                }
             }
         }
     }

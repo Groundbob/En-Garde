@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
 import net.engarde.networking.ParryPayload;
 import net.engarde.parry.ParryHudElement;
+import net.engarde.parry.ParryState;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -37,8 +38,10 @@ public class EnGardeClient implements ClientModInitializer {
             while (parry.consumeClick()) {
                 if (client.player != null) {
 
-                    ParryPayload payload = new ParryPayload(true);
-                    ClientPlayNetworking.send(payload);
+                    ParryState state = (ParryState) client.player;
+                    state.engarde$setParrying(!state.engarde$isParrying());
+
+                    ClientPlayNetworking.send(new ParryPayload(true));
 
                 }
             }
@@ -47,6 +50,9 @@ public class EnGardeClient implements ClientModInitializer {
 
             if (isScreenOpen && !wasScreenOpen) {
                 if (client.player != null) {
+                    ParryState state = (ParryState) client.player;
+                    state.engarde$setParrying(false);
+
                     ClientPlayNetworking.send(new ParryPayload(false));
                 }
             }
