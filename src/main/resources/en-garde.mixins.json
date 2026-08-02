@@ -11,5 +11,10 @@
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "client": [
+    "AvatarRendererMixin",
+    "AvatarRenderStateMixin",
+    "HumanoidModelMixin"
+  ]
 }

@@ -25,7 +25,7 @@ public class ParryHudElement implements HudElement {
                     int x = graphics.guiWidth() / 2 - 8, y = graphics.guiHeight() / 2 + 6;
 
                     graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PARRY_INDICATOR, x, y, 16, 16, 0xAAffffff);
-                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PARRY_CROSS, x, y, 16, 16);
+                    graphics.blitSprite(RenderPipelines.CROSSHAIR, PARRY_CROSS, x, y, 16, 16);
                 }
             }
         }
