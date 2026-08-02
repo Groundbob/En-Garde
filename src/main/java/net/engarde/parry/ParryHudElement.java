@@ -9,13 +9,14 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.NonNull;
 
 public class ParryHudElement implements HudElement {
     private static final Identifier PARRY_INDICATOR = EnGarde.id("hud/parry_indicator");
     private static final Identifier PARRY_CROSS = EnGarde.id("hud/parry_cross");
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = Minecraft.getInstance().player;
         Options options = minecraft.options;

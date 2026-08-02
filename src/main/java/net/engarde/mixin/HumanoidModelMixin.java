@@ -5,7 +5,6 @@ import net.engarde.parry.ParryState;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
