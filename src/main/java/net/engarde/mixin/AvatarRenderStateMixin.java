@@ -1,12 +1,12 @@
 package net.engarde.mixin;
 
-import net.engarde.accessor.ParryAccessor;
+import net.engarde.parry.ParryState;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(AvatarRenderState.class)
-public class AvatarRenderStateMixin implements ParryAccessor {
+public class AvatarRenderStateMixin implements ParryState {
     @Unique
     private boolean engarde$isParrying;
 

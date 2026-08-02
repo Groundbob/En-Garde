@@ -1,6 +1,5 @@
 package net.engarde.mixin;
 
-import net.engarde.accessor.ParryAccessor;
 import net.engarde.parry.ParryState;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
@@ -17,9 +16,9 @@ public class AvatarRendererMixin <AvatarlikeEntity extends Avatar & ClientAvatar
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
     private void engarde$attachParry(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo ci) {
-        if (state instanceof ParryAccessor parryAccessor) {
-            boolean parrying = entity instanceof ParryState parryState && parryState.engarde$isParrying();
-            parryAccessor.engarde$setParrying(parrying);
+        if (state instanceof ParryState parryState) {
+            boolean parrying = entity instanceof ParryState entityParryState && entityParryState.engarde$isParrying();
+            parryState.engarde$setParrying(parrying);
         }
     }
 
