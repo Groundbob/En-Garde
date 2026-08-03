@@ -6,6 +6,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 public record ParrySyncPayload(int entityId, boolean isParrying) implements CustomPacketPayload {
     public static final Identifier PARRY_SYNC_ID = Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "sync_parry");
@@ -18,7 +19,7 @@ public record ParrySyncPayload(int entityId, boolean isParrying) implements Cust
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public @NonNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }
