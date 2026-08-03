@@ -3,6 +3,7 @@ package net.engarde.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
 import net.engarde.networking.ParryPayload;
+import net.engarde.networking.ParrySyncPayload;
 import net.engarde.parry.ParryHudElement;
 import net.engarde.parry.ParryState;
 import net.fabricmc.api.ClientModInitializer;
@@ -60,6 +61,16 @@ public class EnGardeClient implements ClientModInitializer {
         });
 
         HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, EnGarde.id("parry_indicator"), new ParryHudElement());
+
+        ClientPlayNetworking.registerGlobalReceiver(ParrySyncPayload.TYPE, (payload, context) -> {
+            context.client().execute(() -> {
+                if (context.client().level == null) return;
+                var entity = context.client().level.getEntity(payload.entityId());
+                if (entity instanceof ParryState parryState) {
+                    parryState.engarde$setParrying(payload.isParrying());
+                }
+            });
+        });
 
     }
 }

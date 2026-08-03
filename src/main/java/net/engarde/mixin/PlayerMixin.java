@@ -1,7 +1,9 @@
 package net.engarde.mixin;
 
+import net.engarde.EnGarde;
 import net.engarde.parry.ParryState;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,7 +39,10 @@ public class PlayerMixin implements ParryState {
         if (this.engarde$parrying) {
             if (this.engarde$lastSlot != -1 && this.engarde$lastSlot != inventory.getSelectedSlot()) {
                 this.engarde$parrying = false;
-                player.sendSystemMessage(Component.literal("Parry Cancelled (switched slots)"));
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    player.sendSystemMessage(Component.literal("Parry Cancelled (switched slots)"));
+                    EnGarde.broadcastParryState(serverPlayer, false);
+                }
             }
         }
 
