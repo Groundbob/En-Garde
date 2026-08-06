@@ -26,6 +26,9 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
     @Shadow
     public abstract ModelPart getHead();
 
+    @Shadow
+    public abstract ModelPart getArm(HumanoidArm arm);
+
     @Inject(method = "poseRightArm", at = @At("HEAD"), cancellable = true)
     private void engarde$parryRight(T state, CallbackInfo ci) {
         if (!(state instanceof ParryState parryState)) return;
@@ -55,23 +58,26 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
                     if (state.mainArm.equals(HumanoidArm.RIGHT)) {
                         this.rightArm.xRot = (float) (-Math.PI / 2) + getHead().xRot + 0.3F;
                         this.rightArm.yRot = -0.35f + getHead().yRot;
+                        ci.cancel();
                     }
                 }
-                //TODO : MAKE DOUBLE HANDED PARRY LOOK GOOD
+
                 case DOUBLE_HANDED_PARRY -> {
                     if (state.mainArm.equals(HumanoidArm.RIGHT)) {
-                        this.rightArm.xRot = -1.5f + getHead().xRot / 2;
-                        this.rightArm.yRot = getHead().yRot;
+                        this.rightArm.xRot = -1.5f + getHead().yRot / 4;
+                        this.rightArm.yRot = -0.3f;
+                        this.rightArm.zRot = 1.5f;
+                        ci.cancel();
                     } else {
-                        this.rightArm.xRot = -1.2f + getHead().xRot / 2;
-                        this.rightArm.yRot = -0.6f + getHead().yRot / 4;
+                        this.rightArm.xRot = -1.3f;
+                        this.rightArm.yRot = -0.2f + getHead().yRot / 2;
+                        ci.cancel();
                     }
                 }
                 case null -> {
                 }
             }
 
-            ci.cancel();
         }
     }
 
@@ -105,22 +111,25 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
                     if (state.mainArm.equals(HumanoidArm.LEFT)) {
                         this.leftArm.xRot = (float) (-Math.PI / 2) + getHead().xRot + 0.3F;
                         this.leftArm.yRot = 0.35f + getHead().yRot;
+                        ci.cancel();
                     }
                 }
                 case DOUBLE_HANDED_PARRY -> {
                     if (state.mainArm.equals(HumanoidArm.LEFT)) {
-                        this.leftArm.xRot = -1.5f + getHead().xRot / 2;
-                        this.leftArm.yRot = getHead().yRot;
+                        this.leftArm.xRot = -1.5f - getHead().yRot / 4;
+                        this.leftArm.yRot = 0.3f;
+                        this.leftArm.zRot = -1.5f;
+                        ci.cancel();
                     } else {
-                        this.leftArm.xRot = -1.2f + getHead().xRot / 2;
-                        this.leftArm.yRot = 0.6f + getHead().yRot / 4;
+                        this.leftArm.xRot = -1.3f;
+                        this.leftArm.yRot = 0.2f + getHead().yRot / 2;
+                        ci.cancel();
                     }
                 }
                 case null -> {
                 }
             }
 
-            ci.cancel();
         }
 
     }
