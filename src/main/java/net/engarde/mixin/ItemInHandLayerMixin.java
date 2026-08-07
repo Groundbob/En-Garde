@@ -24,8 +24,9 @@ public class ItemInHandLayerMixin {
         if (engarde$shouldRotate(state, itemStack)) {
             poseStack.translate((arm == HumanoidArm.RIGHT)?-0.1f:0.1f,0.0f,-0.07f);
 
-            float rotation = (arm == HumanoidArm.RIGHT) ? 70f : -70f;
+            float rotation = (arm == HumanoidArm.RIGHT) ? 75f : -75f;
             poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
+            poseStack.mulPose(Axis.XP.rotationDegrees(10f));
         }
     }
 
