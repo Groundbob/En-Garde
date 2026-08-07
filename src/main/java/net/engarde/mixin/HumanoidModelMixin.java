@@ -38,7 +38,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
         if (!parryState.engarde$isParrying()) {
             switch (ItemPose.getItemPose(state.getMainHandItemStack())) {
                 case DOUBLE_HANDED_HELD -> {
-                    EnGardeAnimationUtils.animateDoubleHandHeld(this.rightArm, this.leftArm, this.head);
+                    EnGardeAnimationUtils.animateDoubleHandHeld(this.rightArm, this.leftArm);
                     ci.cancel();
                 }
                 case SPEAR_HELD -> {
@@ -52,11 +52,8 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
             switch (ParryPose.getParryPose(state.getMainHandItemStack())) {
                 case SINGLE_HANDED_PARRY -> {
-                    if (isMainArmRight) {
-                        this.rightArm.xRot = (float) (-Math.PI / 2) + getHead().xRot + 0.3F;
-                        this.rightArm.yRot = -0.35f + getHead().yRot;
-                        ci.cancel();
-                    }
+                    EnGardeAnimationUtils.animateSingleHandParry(this.rightArm, this.leftArm, this.head, isMainArmRight);
+                    ci.cancel();
                 }
 
                 case DOUBLE_HANDED_PARRY -> {
@@ -77,7 +74,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
         if (!parryState.engarde$isParrying()) {
             switch (ItemPose.getItemPose(state.getMainHandItemStack())) {
                 case DOUBLE_HANDED_HELD -> {
-                    EnGardeAnimationUtils.animateDoubleHandHeld(this.rightArm, this.leftArm, this.head);
+                    EnGardeAnimationUtils.animateDoubleHandHeld(this.rightArm, this.leftArm);
                     ci.cancel();
                 }
                 case SPEAR_HELD -> {
@@ -92,11 +89,8 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
             switch (ParryPose.getParryPose(state.getMainHandItemStack())) {
                 case SINGLE_HANDED_PARRY -> {
-                    if (!isMainArmRight) {
-                        this.leftArm.xRot = (float) (-Math.PI / 2) + getHead().xRot + 0.3F;
-                        this.leftArm.yRot = 0.35f + getHead().yRot;
-                        ci.cancel();
-                    }
+                    EnGardeAnimationUtils.animateSingleHandParry(this.rightArm, this.leftArm, this.head, isMainArmRight);
+                    ci.cancel();
                 }
                 case DOUBLE_HANDED_PARRY -> {
                     EnGardeAnimationUtils.animateDoubleHandParry(this.rightArm, this.leftArm, this.head, isMainArmRight);

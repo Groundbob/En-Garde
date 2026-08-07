@@ -6,11 +6,17 @@ import net.minecraft.client.model.geom.ModelPart;
 
 @Environment(EnvType.CLIENT)
 public class EnGardeAnimationUtils {
-    public static void animateDoubleHandHeld(final ModelPart rightArm, final ModelPart leftArm, final ModelPart head) {
-        rightArm.xRot = -1.2f + head.xRot/2;
-        rightArm.yRot = -0.6f + head.yRot / 4;
-        leftArm.xRot = -1.2f + head.xRot/2;
-        leftArm.yRot = 0.6f + head.yRot/4;
+    public static void animateDoubleHandHeld(final ModelPart rightArm, final ModelPart leftArm) {
+        rightArm.xRot = -1.2f;
+        rightArm.yRot = -0.6f;
+        leftArm.xRot = -1.2f;
+        leftArm.yRot = 0.6f;
+    }
+
+    public static void animateSingleHandParry(final ModelPart rightArm, final ModelPart leftArm, final ModelPart head, final boolean mainHandRight) {
+        ModelPart mainHand = mainHandRight ? rightArm : leftArm;
+        mainHand.xRot = (float) (-Math.PI/2) + head.xRot + 0.3f;
+        mainHand.yRot = (mainHandRight ? -0.35f : 0.35f) + head.yRot;
     }
 
     //TODO: Fix bug where when you parry with mace, your offhand doesn't always touch the mace.
