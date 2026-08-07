@@ -28,9 +28,6 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
     public abstract ModelPart getHead();
 
     @Shadow
-    public abstract ModelPart getArm(HumanoidArm arm);
-
-    @Shadow
     @Final
     public ModelPart head;
 
@@ -95,7 +92,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
             switch (ParryPose.getParryPose(state.getMainHandItemStack())) {
                 case SINGLE_HANDED_PARRY -> {
-                    if (isMainArmRight) {
+                    if (!isMainArmRight) {
                         this.leftArm.xRot = (float) (-Math.PI / 2) + getHead().xRot + 0.3F;
                         this.leftArm.yRot = 0.35f + getHead().yRot;
                         ci.cancel();
