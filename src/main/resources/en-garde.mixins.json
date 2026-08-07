@@ -12,10 +12,12 @@
     "requireAnnotations": true
   },
   "client": [
+    "ArmedEntityRenderStateMixin",
     "AvatarRendererMixin",
     "AvatarRenderStateMixin",
     "HumanoidModelMixin",
     "ItemInHandLayerMixin",
-    "ItemInHandRendererMixin"
+    "ItemInHandRendererMixin",
+    "LivingEntityRendererMixin"
   ]
 }

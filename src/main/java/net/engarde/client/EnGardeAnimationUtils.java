@@ -13,6 +13,7 @@ public class EnGardeAnimationUtils {
         leftArm.yRot = 0.6f + head.yRot/4;
     }
 
+    //TODO: Fix bug where when you parry with mace, your offhand doesn't always touch the mace.
     public static void animateDoubleHandParry(final ModelPart rightArm, final ModelPart leftArm, final ModelPart head, final boolean mainHandRight) {
         ModelPart mainHand = mainHandRight ? rightArm : leftArm;
         ModelPart offhand = mainHandRight ? leftArm : rightArm;
