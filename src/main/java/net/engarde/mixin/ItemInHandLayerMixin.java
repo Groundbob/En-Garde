@@ -34,11 +34,12 @@ public class ItemInHandLayerMixin {
         }
     }
 
-    @Unique
+    /*@Unique
     private static boolean engarde$shouldRotate(LivingEntity livingEntity, ItemStack itemStack) {
         if (!(livingEntity instanceof ParryState parryState) || !parryState.engarde$isParrying()) {
             return false;
         }
         return ParryPose.getParryPose(itemStack) == ParryPose.DOUBLE_HANDED_PARRY;
     }
+     */
 }
