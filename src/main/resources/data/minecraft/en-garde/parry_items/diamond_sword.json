@@ -1,0 +1,9 @@
+{
+  "parry_item": true,
+  "heavy_item": false,
+  "range_modifier": 0.0,
+  "speed_modifier": 0.0,
+  "shield_size": 1.0,
+  "shield_cooldown": 10,
+  "parry_pose": "single_handed"
+}
