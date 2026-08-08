@@ -11,6 +11,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,14 +26,15 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
     public ModelPart leftArm;
 
     @Shadow
-    public abstract ModelPart getHead();
-
-    @Shadow
     @Final
     public ModelPart head;
 
+    @Unique
+    private boolean engarde$applyingOffhandPose = false;
+
     @Inject(method = "poseRightArm", at = @At("HEAD"), cancellable = true)
     private void engarde$parryRight(T state, CallbackInfo ci) {
+        if (this.engarde$applyingOffhandPose) return;
         boolean isMainArmRight = state.mainArm.equals(HumanoidArm.RIGHT);
         if (!(state instanceof ParryState parryState)) return;
         if (!parryState.engarde$isParrying()) {
@@ -52,7 +54,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
             switch (ParryPose.getParryPose(state.getMainHandItemStack())) {
                 case SINGLE_HANDED_PARRY -> {
-                    EnGardeAnimationUtils.animateSingleHandParry(this.rightArm, this.leftArm, this.head, isMainArmRight);
+                    engarde$poseOffhandThenParry(state, isMainArmRight);
                     ci.cancel();
                 }
 
@@ -69,6 +71,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
     @Inject(method = "poseLeftArm", at = @At("HEAD"), cancellable = true)
     private void engarde$parryLeft(T state, CallbackInfo ci) {
+        if (this.engarde$applyingOffhandPose) return;;
         boolean isMainArmRight = state.mainArm.equals(HumanoidArm.RIGHT);
         if (!(state instanceof ParryState parryState)) return;
         if (!parryState.engarde$isParrying()) {
@@ -89,7 +92,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
             switch (ParryPose.getParryPose(state.getMainHandItemStack())) {
                 case SINGLE_HANDED_PARRY -> {
-                    EnGardeAnimationUtils.animateSingleHandParry(this.rightArm, this.leftArm, this.head, isMainArmRight);
+                    engarde$poseOffhandThenParry(state, isMainArmRight);
                     ci.cancel();
                 }
                 case DOUBLE_HANDED_PARRY -> {
@@ -102,5 +105,21 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
         }
 
+    }
+
+    @Unique
+    private void engarde$poseOffhandThenParry(T state, boolean isMainArmRight) {
+        this.engarde$applyingOffhandPose = true;
+        try {
+            HumanoidModelAccessor<T> accessor = (HumanoidModelAccessor<T>) this;
+            if (isMainArmRight) {
+                accessor.engarde$poseLeftArm(state);
+            } else {
+                accessor.engarde$poseRightArm(state);
+            }
+        } finally {
+            this.engarde$applyingOffhandPose = false;
+        }
+        EnGardeAnimationUtils.animateSingleHandParry(this.rightArm, this.leftArm, this.head, isMainArmRight);
     }
 }
