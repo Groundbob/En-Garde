@@ -3,7 +3,6 @@ package net.engarde.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
 import net.engarde.config.ParryItemConfig;
-import net.engarde.config.ParryItemManager;
 import net.engarde.networking.ItemConfigSyncPayload;
 import net.engarde.networking.ParryPayload;
 import net.engarde.networking.ParrySyncPayload;

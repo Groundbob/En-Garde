@@ -71,7 +71,7 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
 
     @Inject(method = "poseLeftArm", at = @At("HEAD"), cancellable = true)
     private void engarde$parryLeft(T state, CallbackInfo ci) {
-        if (this.engarde$applyingOffhandPose) return;;
+        if (this.engarde$applyingOffhandPose) return;
         boolean isMainArmRight = state.mainArm.equals(HumanoidArm.RIGHT);
         if (!(state instanceof ParryState parryState)) return;
         if (!parryState.engarde$isParrying()) {
