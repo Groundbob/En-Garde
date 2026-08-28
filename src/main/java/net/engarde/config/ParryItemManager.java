@@ -23,13 +23,9 @@ public class ParryItemManager extends SimpleJsonResourceReloadListener<ParryItem
     @Override
     protected void apply(@NonNull Map<Identifier, ParryItemConfig> preparations, @NonNull ResourceManager manager, @NonNull ProfilerFiller profiler) {
         EnGarde.PARRY_ITEM_CONFIGS.clear();
-        preparations.keySet().forEach((id) -> {
-            EnGarde.PARRY_ITEM_CONFIGS.put(id, getItemConfig(id, preparations));
-        });
+        preparations.keySet().forEach((id) -> EnGarde.PARRY_ITEM_CONFIGS.put(id, getItemConfig(id, preparations)));
         if (EnGarde.SERVER == null) return;
-        PlayerLookup.all(EnGarde.SERVER).forEach(player -> {
-            ServerPlayNetworking.send(player, new ItemConfigSyncPayload(EnGarde.PARRY_ITEM_CONFIGS));
-        });
+        PlayerLookup.all(EnGarde.SERVER).forEach(player -> ServerPlayNetworking.send(player, new ItemConfigSyncPayload(EnGarde.PARRY_ITEM_CONFIGS)));
     }
 
     private ParryItemConfig getItemConfig (Identifier id, @NonNull Map<Identifier, ParryItemConfig> preparations) {
