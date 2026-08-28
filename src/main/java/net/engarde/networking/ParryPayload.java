@@ -8,9 +8,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
 public record ParryPayload(boolean isParrying) implements CustomPacketPayload {
-    public static final Identifier PARRY_PAYLOAD_ID = Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "client_parry");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "client_parry");
 
-    public static final CustomPacketPayload.Type<ParryPayload> TYPE = new CustomPacketPayload.Type<>(PARRY_PAYLOAD_ID);
+    public static final CustomPacketPayload.Type<ParryPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ParryPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ParryPayload::isParrying,

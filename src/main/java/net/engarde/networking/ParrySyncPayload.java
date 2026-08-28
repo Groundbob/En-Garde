@@ -9,8 +9,8 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 
 public record ParrySyncPayload(int entityId, boolean isParrying) implements CustomPacketPayload {
-    public static final Identifier PARRY_SYNC_ID = Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "sync_parry");
-    public static final CustomPacketPayload.Type<ParrySyncPayload> TYPE = new CustomPacketPayload.Type<>(PARRY_SYNC_ID);
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "sync_parry");
+    public static final CustomPacketPayload.Type<ParrySyncPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ParrySyncPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ParrySyncPayload::entityId,

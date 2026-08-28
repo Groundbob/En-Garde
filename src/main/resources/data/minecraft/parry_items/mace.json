@@ -1,5 +1,5 @@
 {
   "parry_item": true,
-  "heavy_item": false,
+  "heavy_item": true,
   "parry_pose": "double_handed"
 }

@@ -2,6 +2,9 @@ package net.engarde.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
+import net.engarde.config.ParryItemConfig;
+import net.engarde.config.ParryItemManager;
+import net.engarde.networking.ItemConfigSyncPayload;
 import net.engarde.networking.ParryPayload;
 import net.engarde.networking.ParrySyncPayload;
 import net.engarde.parry.ParryHudElement;
@@ -16,7 +19,12 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.ToggleKeyMapping;
 import net.minecraft.resources.Identifier;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EnGardeClient implements ClientModInitializer {
+    public static final Map<Identifier, ParryItemConfig> PARRY_ITEM_CONFIGS = new HashMap<>();
+
     private static boolean wasScreenOpen = false;
 
     @Override
@@ -71,6 +79,15 @@ public class EnGardeClient implements ClientModInitializer {
                 }
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(ItemConfigSyncPayload.TYPE, ((payload, context) -> {
+            context.client().execute(() -> {
+                PARRY_ITEM_CONFIGS.clear();
+                PARRY_ITEM_CONFIGS.putAll(payload.itemConfigs());
+
+                System.out.println("yo wassup my beggars, " + PARRY_ITEM_CONFIGS.get(Identifier.withDefaultNamespace("diamond_sword")).parryPose);
+            });
+        }));
 
     }
 }

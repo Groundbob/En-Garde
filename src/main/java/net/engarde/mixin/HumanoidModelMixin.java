@@ -1,7 +1,7 @@
 package net.engarde.mixin;
 
 import net.engarde.client.EnGardeAnimationUtils;
-import net.engarde.client.ItemPose;
+import net.engarde.parry.ItemPose;
 import net.engarde.parry.ParryPose;
 import net.engarde.parry.ParryState;
 import net.minecraft.client.model.HumanoidModel;
@@ -39,11 +39,11 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
         if (!(state instanceof ParryState parryState)) return;
         if (!parryState.engarde$isParrying()) {
             switch (ItemPose.getItemPose(state.getMainHandItemStack())) {
-                case DOUBLE_HANDED_HELD -> {
+                case DOUBLE_HANDED -> {
                     EnGardeAnimationUtils.animateDoubleHandHeld(this.rightArm, this.leftArm);
                     ci.cancel();
                 }
-                case SPEAR_HELD -> {
+                case SPEAR -> {
 
                     ci.cancel();
                 }
@@ -76,11 +76,11 @@ public abstract class HumanoidModelMixin<T extends HumanoidRenderState> {
         if (!(state instanceof ParryState parryState)) return;
         if (!parryState.engarde$isParrying()) {
             switch (ItemPose.getItemPose(state.getMainHandItemStack())) {
-                case DOUBLE_HANDED_HELD -> {
+                case DOUBLE_HANDED -> {
                     EnGardeAnimationUtils.animateDoubleHandHeld(this.rightArm, this.leftArm);
                     ci.cancel();
                 }
-                case SPEAR_HELD -> {
+                case SPEAR -> {
 
                     ci.cancel();
                 }
