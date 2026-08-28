@@ -45,13 +45,31 @@ public class ParryItemManager extends SimpleJsonResourceReloadListener<ParryItem
         }
         if (loaded.parryItem != null) itemConfig.parryItem = loaded.parryItem;
         if (loaded.heavyItem != null) itemConfig.heavyItem = loaded.heavyItem;
-        if (loaded.range != null) itemConfig.range = loaded.range;
-        if (loaded.speed != null) itemConfig.speed = loaded.speed;
-        if (loaded.damage != null) itemConfig.damage = loaded.damage;
-        if (loaded.shieldSize != null) itemConfig.shieldSize = loaded.shieldSize;
-        if (loaded.shieldCooldown != null) itemConfig.shieldCooldown = loaded.shieldCooldown;
+        if (loaded.combat != null) {
+            Float range;
+            Float speed;
+            Float damage;
+            if (itemConfig.combat==null) itemConfig.combat = new ParryItemConfig.CombatStats(null, null, null);
+            range = itemConfig.combat.range();
+            speed = itemConfig.combat.speed();
+            damage = itemConfig.combat.damage();
+            if (loaded.combat.range() != null) range = loaded.combat.range();
+            if (loaded.combat.speed() != null) speed = loaded.combat.speed();
+            if (loaded.combat.damage() != null) damage = loaded.combat.damage();
+            itemConfig.combat = new ParryItemConfig.CombatStats(range, speed, damage);
+        }
+        if (loaded.shield != null) {
+            Float size;
+            Integer cooldown;
+            if (itemConfig.shield==null) itemConfig.shield = new ParryItemConfig.ShieldStats(null, null);
+            size = itemConfig.shield.size();
+            cooldown = itemConfig.shield.cooldown();
+            if (loaded.shield.size() != null) size = loaded.shield.size();
+            if (loaded.shield.cooldown() != null) cooldown = loaded.shield.cooldown();
+            itemConfig.shield = new ParryItemConfig.ShieldStats(size, cooldown);
+        }
         if (loaded.parryPose != null) itemConfig.parryPose = loaded.parryPose;
-
+        if (loaded.itemPose != null) itemConfig.itemPose = loaded.itemPose;
 
         return itemConfig;
     }

@@ -26,7 +26,7 @@ public enum ParryPose {
     public static ParryPose getParryPose(ItemStack itemStack) {
         Identifier itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
-        if (itemConfig!=null&&itemConfig.parryPose!=null) return itemConfig.parryPose;
+        if (itemConfig != null && itemConfig.parryPose != null) return itemConfig.parryPose;
 
         return SINGLE_HANDED;
     }

@@ -26,7 +26,9 @@ public enum ItemPose {
     public static ItemPose getItemPose(ItemStack itemStack) {
         Identifier itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
-        //if (itemConfig!=null) return itemConfig.itemPose;
+
+        if (itemConfig != null && itemConfig.itemPose != null) return itemConfig.itemPose;
+
         return null;
     }
 }
