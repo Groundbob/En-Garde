@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.engarde.client.EnGardeClient;
 import net.engarde.config.ParryItemConfig;
-import net.engarde.parry.ParryPose;
 import net.engarde.parry.ParryState;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;

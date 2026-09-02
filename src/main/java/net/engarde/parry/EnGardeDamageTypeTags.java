@@ -2,7 +2,6 @@ package net.engarde.parry;
 
 import net.engarde.EnGarde;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 

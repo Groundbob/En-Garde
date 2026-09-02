@@ -1,6 +1,5 @@
 package net.engarde.parry;
 
-import net.engarde.EnGarde;
 import net.engarde.client.EnGardeClient;
 import net.engarde.config.ParryItemConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,7 +8,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public enum ParryPose {
     SINGLE_HANDED("single_handed"),

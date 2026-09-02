@@ -42,46 +42,40 @@ public class EnGarde implements ModInitializer {
 
 		LOGGER.info("Initializing En Garde!");
 
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			SERVER = server;
-		});
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
 
-		ServerPlayerEvents.JOIN.register(player -> {
-			ServerPlayNetworking.send(player, new ItemConfigSyncPayload(PARRY_ITEM_CONFIGS));
-		});
+		ServerPlayerEvents.JOIN.register(player -> ServerPlayNetworking.send(player, new ItemConfigSyncPayload(PARRY_ITEM_CONFIGS)));
 
 		PayloadTypeRegistry.serverboundPlay().register(ParryPayload.TYPE, ParryPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ParrySyncPayload.TYPE, ParrySyncPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ItemConfigSyncPayload.TYPE, ItemConfigSyncPayload.CODEC);
 
-		ServerPlayNetworking.registerGlobalReceiver(ParryPayload.TYPE, (payload, context) -> {
-			context.server().execute(() -> {
-				if (context.player() instanceof ParryState parryStatePlayer) {
-					ServerPlayer serverPlayer = context.player();
+		ServerPlayNetworking.registerGlobalReceiver(ParryPayload.TYPE, (payload, context) -> context.server().execute(() -> {
+            if (context.player() instanceof ParryState parryStatePlayer) {
+                ServerPlayer serverPlayer = context.player();
 
-					Item mainHandItem = serverPlayer.getMainHandItem().getItem();
-					Identifier itemId = BuiltInRegistries.ITEM.getKey(mainHandItem);
-					ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
+                Item mainHandItem = serverPlayer.getMainHandItem().getItem();
+                Identifier itemId = BuiltInRegistries.ITEM.getKey(mainHandItem);
+                ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
 
-					if ((itemConfig == null || !itemConfig.parryItem)&&payload.isParrying()) return;
+                if ((itemConfig == null || !itemConfig.parryItem)&&payload.isParrying()) return;
 
-					boolean before = parryStatePlayer.engarde$isParrying();
-					boolean after = before;
+                boolean before = parryStatePlayer.engarde$isParrying();
+                boolean after = before;
 
-					if (payload.isParrying()) {
-						after = !before;
-					} else if (before) {
-							after = false;
-					}
+                if (payload.isParrying()) {
+                    after = !before;
+                } else if (before) {
+                        after = false;
+                }
 
-					if (after != before) {
-						parryStatePlayer.engarde$setParrying(after);
-						serverPlayer.sendSystemMessage(Component.literal(after ? "Parry Stance: ON" : "Parry Stance: OFF"));
-						broadcastParryState(serverPlayer, after);
-					}
-				}
-			});
-		});
+                if (after != before) {
+                    parryStatePlayer.engarde$setParrying(after);
+                    serverPlayer.sendSystemMessage(Component.literal(after ? "Parry Stance: ON" : "Parry Stance: OFF"));
+                    broadcastParryState(serverPlayer, after);
+                }
+            }
+        }));
 
 		EntityTrackingEvents.START_TRACKING.register((entity, player) -> {
 			if (entity instanceof ParryState parryState && parryState.engarde$isParrying()) {

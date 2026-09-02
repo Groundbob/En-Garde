@@ -74,22 +74,18 @@ public class EnGardeClient implements ClientModInitializer {
 
         HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, EnGarde.id("parry_indicator"), new ParryHudElement());
 
-        ClientPlayNetworking.registerGlobalReceiver(ParrySyncPayload.TYPE, (payload, context) -> {
-            context.client().execute(() -> {
-                if (context.client().level == null) return;
-                var entity = context.client().level.getEntity(payload.entityId());
-                if (entity instanceof ParryState parryState) {
-                    parryState.engarde$setParrying(payload.isParrying());
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ItemConfigSyncPayload.TYPE, ((payload, context) -> {
-            context.client().execute(() -> {
-                PARRY_ITEM_CONFIGS.clear();
-                PARRY_ITEM_CONFIGS.putAll(payload.itemConfigs());
-            });
+        ClientPlayNetworking.registerGlobalReceiver(ParrySyncPayload.TYPE, (payload, context) -> context.client().execute(() -> {
+            if (context.client().level == null) return;
+            var entity = context.client().level.getEntity(payload.entityId());
+            if (entity instanceof ParryState parryState) {
+                parryState.engarde$setParrying(payload.isParrying());
+            }
         }));
+
+        ClientPlayNetworking.registerGlobalReceiver(ItemConfigSyncPayload.TYPE, ((payload, context) -> context.client().execute(() -> {
+            PARRY_ITEM_CONFIGS.clear();
+            PARRY_ITEM_CONFIGS.putAll(payload.itemConfigs());
+        })));
 
     }
 }
