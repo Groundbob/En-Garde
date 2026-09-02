@@ -40,7 +40,6 @@ public class PlayerMixin implements ParryState {
             if (this.engarde$lastSlot != -1 && this.engarde$lastSlot != inventory.getSelectedSlot()) {
                 this.engarde$parrying = false;
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    player.sendSystemMessage(Component.literal("Parry Cancelled (switched slots)"));
                     EnGarde.broadcastParryState(serverPlayer, false);
                 }
             }

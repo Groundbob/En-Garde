@@ -1,0 +1,15 @@
+{
+  "values": [
+    "#minecraft:bypasses_armor",
+    "#minecraft:bypasses_shield",
+    "minecraft:arrow",
+    "minecraft:explosion",
+    "minecraft:player_explosion",
+    "minecraft:spit",
+    "minecraft:fireball",
+    "minecraft:thrown",
+    "minecraft:trident",
+    "minecraft:wind_charge",
+    "minecraft:wither_skull"
+  ]
+}

@@ -7,6 +7,7 @@ import net.engarde.networking.ItemConfigSyncPayload;
 import net.engarde.networking.ParryPayload;
 import net.engarde.networking.ParrySyncPayload;
 import net.engarde.parry.ParryState;
+import net.engarde.sound.CustomSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.FileToIdConverter;
@@ -22,6 +24,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +74,6 @@ public class EnGarde implements ModInitializer {
 
                 if (after != before) {
                     parryStatePlayer.engarde$setParrying(after);
-                    serverPlayer.sendSystemMessage(Component.literal(after ? "Parry Stance: ON" : "Parry Stance: OFF"));
                     broadcastParryState(serverPlayer, after);
                 }
             }
@@ -84,6 +86,8 @@ public class EnGarde implements ModInitializer {
 		});
 
 		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(id("parry_items"), new ParryItemManager(ParryItemConfig.CODEC, new FileToIdConverter("parry_items", ".json")));
+
+		CustomSounds.initialize();
 	}
 
 	public static void broadcastParryState(ServerPlayer player, boolean isParrying) {

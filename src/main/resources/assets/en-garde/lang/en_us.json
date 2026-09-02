@@ -1,4 +1,7 @@
 {
   "key.category.en-garde.custom_category": "En Garde",
-  "key.en-garde.parry": "Parry"
+  "key.en-garde.parry": "Parry",
+
+  "sounds.en-garde.parry_clang": "Parry Clang",
+  "sounds.en-garde.heavy_parry_clang": "Heavy Parry Clang"
 }
