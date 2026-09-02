@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LivingEntityRendererMixin {
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("RETURN"))
-    private void engarde$extractParryData(LivingEntity livingEntity, LivingEntityRenderState state, float tickDelta, CallbackInfo ci) {
-        if (livingEntity instanceof ParryState parryState) {
+    private void engarde$extractParryData(LivingEntity entity, LivingEntityRenderState state, float partialTicks, CallbackInfo ci) {
+        if (entity instanceof ParryState parryState) {
             if (state instanceof ParryRenderState parryRenderState) {
                 parryRenderState.engarde$setParrying(parryState.engarde$isParrying());
             }

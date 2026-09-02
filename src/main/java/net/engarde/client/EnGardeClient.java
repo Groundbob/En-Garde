@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.ToggleKeyMapping;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
@@ -46,11 +47,15 @@ public class EnGardeClient implements ClientModInitializer {
             while (parry.consumeClick()) {
                 if (client.player != null) {
 
-                    ParryState state = (ParryState) client.player;
-                    state.engarde$setParrying(!state.engarde$isParrying());
+                    Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
+                    ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
+                    if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
 
-                    ClientPlayNetworking.send(new ParryPayload(true));
+                        ParryState state = (ParryState) client.player;
+                        state.engarde$setParrying(!state.engarde$isParrying());
 
+                        ClientPlayNetworking.send(new ParryPayload(true));
+                    }
                 }
             }
 
@@ -83,8 +88,6 @@ public class EnGardeClient implements ClientModInitializer {
             context.client().execute(() -> {
                 PARRY_ITEM_CONFIGS.clear();
                 PARRY_ITEM_CONFIGS.putAll(payload.itemConfigs());
-
-                System.out.println("yo wassup my beggars, " + PARRY_ITEM_CONFIGS.get(Identifier.withDefaultNamespace("diamond_sword")).parryPose);
             });
         }));
 

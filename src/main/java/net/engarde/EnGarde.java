@@ -1,5 +1,6 @@
 package net.engarde;
 
+import net.engarde.client.EnGardeClient;
 import net.engarde.config.ParryItemConfig;
 import net.engarde.config.ParryItemManager;
 import net.engarde.networking.ItemConfigSyncPayload;
@@ -14,12 +15,14 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +58,13 @@ public class EnGarde implements ModInitializer {
 			context.server().execute(() -> {
 				if (context.player() instanceof ParryState parryStatePlayer) {
 					ServerPlayer serverPlayer = context.player();
+
+					Item mainHandItem = serverPlayer.getMainHandItem().getItem();
+					Identifier itemId = BuiltInRegistries.ITEM.getKey(mainHandItem);
+					ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
+
+					if ((itemConfig == null || !itemConfig.parryItem)&&payload.isParrying()) return;
+
 					boolean before = parryStatePlayer.engarde$isParrying();
 					boolean after = before;
 

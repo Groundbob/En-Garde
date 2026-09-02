@@ -1,6 +1,7 @@
 package net.engarde.config;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.engarde.parry.ItemPose;
 import net.engarde.parry.ParryPose;
@@ -18,8 +19,7 @@ public class ParryItemConfig {
     public Boolean heavyItem;
     public CombatStats combat;
     public ShieldStats shield;
-    public ParryPose parryPose;
-    public ItemPose itemPose;
+    public Poses poses;
 
     public record CombatStats(Float range, Float speed, Float damage) {
         public static final Codec<CombatStats> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -67,15 +67,49 @@ public class ParryItemConfig {
         );
     }
 
-    private static final Codec<ParryPose> PARRY_POSE_CODEC = Codec.STRING.xmap(
-            s -> ParryPose.valueOf(s.toUpperCase(Locale.ROOT)),
-            pose -> pose.id.toLowerCase(Locale.ROOT)
+    public record Poses(ParryPose parryPose, ItemPose itemPose) {
+        public static final Codec<Poses> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                PARRY_POSE_CODEC.optionalFieldOf("parry_pose").forGetter(c -> Optional.ofNullable(c.parryPose)),
+                ITEM_POSE_CODEC.optionalFieldOf("item_pose").forGetter(c -> Optional.ofNullable(c.itemPose))
+        ).apply(instance, (parryPose, itemPose) ->
+                new Poses(
+                        parryPose.orElse(null),
+                        itemPose.orElse(null)
+                )));
+
+        public static final StreamCodec<FriendlyByteBuf, Poses> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.optional(ParryPose.STREAM_CODEC), c -> Optional.ofNullable(c.parryPose),
+                ByteBufCodecs.optional(ItemPose.STREAM_CODEC), c -> Optional.ofNullable(c.itemPose),
+                (parryPose, itemPose) ->
+                        new Poses(
+                                parryPose.orElse(null),
+                                itemPose.orElse(null)
+                        )
+        );
+    }
+
+    private static final Codec<ParryPose> PARRY_POSE_CODEC = Codec.STRING.flatXmap(
+            s -> {
+                ParryPose pose = ParryPose.fromId(s);
+                return pose != null
+                        ? DataResult.success(pose)
+                        : DataResult.error(() -> "Unkown parry pose: " + s);
+            },
+            pose -> DataResult.success(pose.id.toLowerCase(Locale.ROOT))
     );
 
-    private static final Codec<ItemPose> ITEM_POSE_CODEC = Codec.STRING.xmap(
-            s -> ItemPose.valueOf(s.toUpperCase(Locale.ROOT)),
-            pose -> pose.id.toLowerCase(Locale.ROOT)
+    private static final Codec<ItemPose> ITEM_POSE_CODEC = Codec.STRING.flatXmap(
+            s -> {
+                ItemPose pose = ItemPose.fromId(s);
+                return pose != null
+                        ? DataResult.success(pose)
+                        : DataResult.error(() -> "Unkown item pose: " + s);
+            },
+            pose -> DataResult.success(pose.id.toLowerCase(Locale.ROOT))
     );
+
+
+    /* Below is the set-up for the json files */
 
     public static final Codec<ParryItemConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.optionalFieldOf("template").forGetter(c -> Optional.ofNullable(c.template)),
@@ -83,17 +117,15 @@ public class ParryItemConfig {
             Codec.BOOL.optionalFieldOf("heavy_item").forGetter(c -> Optional.ofNullable(c.heavyItem)),
             CombatStats.CODEC.optionalFieldOf("combat").forGetter(c -> Optional.ofNullable(c.combat)),
             ShieldStats.CODEC.optionalFieldOf("shield").forGetter(c -> Optional.ofNullable(c.shield)),
-            PARRY_POSE_CODEC.optionalFieldOf("parry_pose").forGetter(c -> Optional.ofNullable(c.parryPose)),
-            ITEM_POSE_CODEC.optionalFieldOf("item_pose").forGetter(c -> Optional.ofNullable(c.itemPose))
-    ).apply(instance, (template, parryItem, heavyItem, combat, shield, parryPose, itemPose) ->
+            Poses.CODEC.optionalFieldOf("poses").forGetter(c -> Optional.ofNullable(c.poses))
+    ).apply(instance, (template, parryItem, heavyItem, combat, shield, poses) ->
             new ParryItemConfig(
                     template.orElse(null),
                     parryItem.orElse(null),
                     heavyItem.orElse(null),
                     combat.orElse(null),
                     shield.orElse(null),
-                    parryPose.orElse(null),
-                    itemPose.orElse(null)
+                    poses.orElse(null)
             )));
 
     public static final StreamCodec<FriendlyByteBuf, ParryItemConfig> STREAM_CODEC = StreamCodec.composite(
@@ -102,31 +134,33 @@ public class ParryItemConfig {
             ByteBufCodecs.optional(ByteBufCodecs.BOOL), c -> Optional.ofNullable(c.heavyItem),
             ByteBufCodecs.optional(CombatStats.STREAM_CODEC), c -> Optional.ofNullable(c.combat),
             ByteBufCodecs.optional(ShieldStats.STREAM_CODEC), c -> Optional.ofNullable(c.shield),
-            ByteBufCodecs.optional(ParryPose.STREAM_CODEC), c -> Optional.ofNullable(c.parryPose),
-            ByteBufCodecs.optional(ItemPose.STREAM_CODEC), c -> Optional.ofNullable(c.itemPose),
-            (template, parryItem, heavyItem, combat, shield, parryPose, itemPose) ->
+            ByteBufCodecs.optional(Poses.STREAM_CODEC), c -> Optional.ofNullable(c.poses),
+            (template, parryItem, heavyItem, combat, shield, poses) ->
                     new ParryItemConfig(
                             template.orElse(null),
                             parryItem.orElse(null),
                             heavyItem.orElse(null),
                             combat.orElse(null),
                             shield.orElse(null),
-                            parryPose.orElse(null),
-                            itemPose.orElse(null)
+                            poses.orElse(null)
                     )
     );
 
-    public ParryItemConfig(Identifier template, Boolean parryItem, Boolean heavyItem, CombatStats combat, ShieldStats shield, ParryPose parryPose, ItemPose itemPose) {
+    public ParryItemConfig(Identifier template, Boolean parryItem, Boolean heavyItem, CombatStats combat, ShieldStats shield, Poses poses) {
         this.template = template;
         this.parryItem = parryItem;
         this.heavyItem = heavyItem;
         this.combat = combat;
         this.shield = shield;
-        this.parryPose = parryPose;
-        this.itemPose = itemPose;
+        this.poses = poses;
     }
 
     public ParryItemConfig() {
-        this(null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null);
+    }
+
+    @Override
+    public String toString() {
+        return "ParryItemConfig{"+"parry_item:"+parryItem+"}";
     }
 }

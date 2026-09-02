@@ -3,6 +3,7 @@
   "package": "net.engarde.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "LivingEntityMixin",
     "PlayerMixin"
   ],
   "injectors": {

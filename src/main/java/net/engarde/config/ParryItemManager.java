@@ -3,6 +3,8 @@ package net.engarde.config;
 import com.mojang.serialization.Codec;
 import net.engarde.EnGarde;
 import net.engarde.networking.ItemConfigSyncPayload;
+import net.engarde.parry.ItemPose;
+import net.engarde.parry.ParryPose;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.FileToIdConverter;
@@ -64,8 +66,16 @@ public class ParryItemManager extends SimpleJsonResourceReloadListener<ParryItem
             if (loaded.shield.cooldown() != null) cooldown = loaded.shield.cooldown();
             itemConfig.shield = new ParryItemConfig.ShieldStats(size, cooldown);
         }
-        if (loaded.parryPose != null) itemConfig.parryPose = loaded.parryPose;
-        if (loaded.itemPose != null) itemConfig.itemPose = loaded.itemPose;
+        if (loaded.poses != null) {
+            ParryPose parryPose;
+            ItemPose itemPose;
+            if (itemConfig.poses==null) itemConfig.poses = new ParryItemConfig.Poses(null, null);
+            parryPose = itemConfig.poses.parryPose();
+            itemPose = itemConfig.poses.itemPose();
+            if (loaded.poses.parryPose() != null) parryPose = loaded.poses.parryPose();
+            if (loaded.poses.itemPose() != null) itemPose = loaded.poses.itemPose();
+            itemConfig.poses = new ParryItemConfig.Poses(parryPose, itemPose);
+        }
 
         return itemConfig;
     }

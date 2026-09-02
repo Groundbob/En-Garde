@@ -35,6 +35,6 @@ public class ItemInHandLayerMixin {
         if (!((ParryRenderState) state).engarde$isParrying()) {
             return false;
         }
-        return ParryPose.getParryPose(itemStack) == ParryPose.DOUBLE_HANDED;
+        return ParryPose.getParryPose(itemStack.getItem()) == ParryPose.DOUBLE_HANDED;
     }
 }

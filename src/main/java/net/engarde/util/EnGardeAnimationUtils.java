@@ -1,4 +1,4 @@
-package net.engarde.client;
+package net.engarde.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +19,6 @@ public class EnGardeAnimationUtils {
         mainHand.yRot = (mainHandRight ? -0.35f : 0.35f) + head.yRot;
     }
 
-    //TODO: Fix bug where when you parry with mace, your offhand doesn't always touch the mace.
     public static void animateDoubleHandParry(final ModelPart rightArm, final ModelPart leftArm, final ModelPart head, final boolean mainHandRight) {
         ModelPart mainHand = mainHandRight ? rightArm : leftArm;
         ModelPart offhand = mainHandRight ? leftArm : rightArm;
