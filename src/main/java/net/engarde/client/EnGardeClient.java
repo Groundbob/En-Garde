@@ -21,6 +21,7 @@ import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class EnGardeClient implements ClientModInitializer {
     public static final Map<Identifier, ParryItemConfig> PARRY_ITEM_CONFIGS = new HashMap<>();
@@ -76,7 +77,7 @@ public class EnGardeClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ParrySyncPayload.TYPE, (payload, context) -> context.client().execute(() -> {
             if (context.client().level == null) return;
-            var entity = context.client().level.getEntity(payload.entityId());
+            var entity = Objects.requireNonNull(context.client().level).getEntity(payload.entityId());
             if (entity instanceof ParryState parryState) {
                 parryState.engarde$setParrying(payload.isParrying());
             }
