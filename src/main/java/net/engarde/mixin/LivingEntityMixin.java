@@ -6,6 +6,7 @@ import net.engarde.util.EnGardeUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +23,9 @@ public abstract class LivingEntityMixin{
     @Shadow
     public abstract @Nullable LivingEntity asLivingEntity();
 
+    @Shadow
+    public abstract ItemStack getMainHandItem();
+
     @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isDeadOrDying()Z", shift = At.Shift.BEFORE), cancellable = true)
     private void engarde$parryBlocksCheck(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
         if (this instanceof ParryState parryState && parryState.engarde$isParrying()) {
@@ -29,6 +33,7 @@ public abstract class LivingEntityMixin{
                 if (this.asLivingEntity() != null) {
                     onParry(level, Objects.requireNonNull(this.asLivingEntity()));
                 }
+                EnGardeUtils.parryCooldown(Objects.requireNonNull(this.asLivingEntity()));
                 cir.setReturnValue(false);
             }
         }

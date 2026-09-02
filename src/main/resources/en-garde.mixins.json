@@ -16,6 +16,7 @@
     "ArmedEntityRenderStateMixin",
     "AvatarRendererMixin",
     "AvatarRenderStateMixin",
+    "HudMixin",
     "HumanoidModelAccessor",
     "HumanoidModelMixin",
     "ItemInHandLayerMixin",

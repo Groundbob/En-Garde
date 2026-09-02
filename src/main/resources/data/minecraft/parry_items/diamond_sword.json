@@ -10,7 +10,7 @@
 
   "shield": {
     "size": 90.0,
-    "cooldown": 10
+    "cooldown": 50
   },
 
   "poses": {
