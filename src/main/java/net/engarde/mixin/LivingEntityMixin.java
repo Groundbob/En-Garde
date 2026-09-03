@@ -31,9 +31,12 @@ public abstract class LivingEntityMixin{
         if (this instanceof ParryState parryState && parryState.engarde$isParrying()) {
             if (EnGardeUtils.parryBlocksDamage(this.asLivingEntity(), source)) {
                 if (this.asLivingEntity() != null) {
-                    onParry(level, Objects.requireNonNull(this.asLivingEntity()));
+
+                    if (EnGardeUtils.attackDisablesParry(source)) {
+                        onParry(level, Objects.requireNonNull(this.asLivingEntity()));
+                        EnGardeUtils.parryCooldown(Objects.requireNonNull(this.asLivingEntity()));
+                    }
                 }
-                EnGardeUtils.parryCooldown(Objects.requireNonNull(this.asLivingEntity()));
                 cir.setReturnValue(false);
             }
         }

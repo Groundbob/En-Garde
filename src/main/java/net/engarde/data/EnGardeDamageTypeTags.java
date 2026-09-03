@@ -1,4 +1,4 @@
-package net.engarde.parry;
+package net.engarde.data;
 
 import net.engarde.EnGarde;
 import net.minecraft.core.registries.Registries;

@@ -2,12 +2,15 @@ package net.engarde.util;
 
 import net.engarde.client.EnGardeClient;
 import net.engarde.config.ParryItemConfig;
-import net.engarde.parry.EnGardeDamageTypeTags;
+import net.engarde.data.EnGardeDamageTypeTags;
+import net.engarde.data.EnGardeItemTagProvider;
+import net.engarde.parry.AttackStrengthAccessor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public class EnGardeUtils {
@@ -39,6 +42,18 @@ public class EnGardeUtils {
         int parryCooldownInTicks = (itemConfig != null && itemConfig.shield != null && itemConfig.shield.cooldown() != null) ? itemConfig.shield.cooldown() : 100;
         if (entity instanceof Player player) {
             player.getCooldowns().addCooldown(entity.getMainHandItem(), parryCooldownInTicks);
+        }
+    }
+
+    public static boolean attackDisablesParry(DamageSource source) {
+        if (!(source.getEntity() instanceof Player player)) return true;
+
+        ItemStack attackerItemStack = player.getMainHandItem();
+        if (!attackerItemStack.is(EnGardeItemTagProvider.DEFLECTING_WEAPON)) {
+            return false;
+        } else {
+            float strength = ((AttackStrengthAccessor) player).engarde$getLastAttackStrength();
+            return strength > 0.9f;
         }
     }
 }
