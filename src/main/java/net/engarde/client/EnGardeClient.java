@@ -18,6 +18,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.ToggleKeyMapping;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class EnGardeClient implements ClientModInitializer {
     public static final Map<Identifier, ParryItemConfig> PARRY_ITEM_CONFIGS = new HashMap<>();
 
     private static boolean wasScreenOpen = false;
+    public static boolean wasItemOnCooldown = false;
 
     @Override
     public void onInitializeClient() {
@@ -51,11 +53,12 @@ public class EnGardeClient implements ClientModInitializer {
                     Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
                     ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
                     if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
+                        if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem())) {
+                            ParryState state = (ParryState) client.player;
+                            state.engarde$setParrying(!state.engarde$isParrying());
 
-                        ParryState state = (ParryState) client.player;
-                        state.engarde$setParrying(!state.engarde$isParrying());
-
-                        ClientPlayNetworking.send(new ParryPayload(true));
+                            ClientPlayNetworking.send(new ParryPayload(true));
+                        }
                     }
                 }
             }
@@ -71,6 +74,19 @@ public class EnGardeClient implements ClientModInitializer {
                 }
             }
             wasScreenOpen = isScreenOpen;
+
+            if (client.player != null) {
+                ItemStack itemStack = client.player.getMainHandItem();
+                boolean itemOnCooldown = client.player.getCooldowns().isOnCooldown(itemStack);
+
+                if (itemOnCooldown && !wasItemOnCooldown) {
+                    ParryState state = (ParryState) client.player;
+                    state.engarde$setParrying(false);
+
+                    ClientPlayNetworking.send(new ParryPayload(false));
+                }
+                wasItemOnCooldown = itemOnCooldown;
+            }
         });
 
         HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, EnGarde.id("parry_indicator"), new ParryHudElement());

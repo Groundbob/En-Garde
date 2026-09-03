@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +25,8 @@ public class ItemInHandRendererMixin {
     private void engarde$rotateHeavyItems(LivingEntity mob, ItemStack itemStack, ItemDisplayContext type, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
         if (engarde$shouldRotate(mob, itemStack)) {
             poseStack.pushPose();
-            poseStack.mulPose(Axis.ZP.rotationDegrees(50f));
-            poseStack.mulPose(Axis.YP.rotationDegrees(90f));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(mob.getMainArm() == HumanoidArm.RIGHT ? 50f : -50f));
+            poseStack.mulPose(Axis.YP.rotationDegrees(mob.getMainArm() == HumanoidArm.RIGHT ? 90f : -90f));
             poseStack.mulPose(Axis.XP.rotationDegrees(-15f));
         }
     }

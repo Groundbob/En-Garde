@@ -16,6 +16,7 @@
     "ArmedEntityRenderStateMixin",
     "AvatarRendererMixin",
     "AvatarRenderStateMixin",
+    "ClientCommonPacketListenerImplMixin",
     "HudMixin",
     "HumanoidModelAccessor",
     "HumanoidModelMixin",
