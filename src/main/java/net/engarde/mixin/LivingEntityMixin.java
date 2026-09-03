@@ -51,5 +51,7 @@ public abstract class LivingEntityMixin{
                 user.getSoundSource(),
                 1.0F,
                 0.8F + level.getRandom().nextFloat() * 0.4F);
+        //TODO make this toggle when I make the config for no durability
+        getMainHandItem().hurtAndBreak(1, user, user.getEquipmentSlotForItem(getMainHandItem()));
     }
 }
