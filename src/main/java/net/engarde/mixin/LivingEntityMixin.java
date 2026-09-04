@@ -1,5 +1,6 @@
 package net.engarde.mixin;
 
+import net.engarde.config.EnGardeConfig;
 import net.engarde.parry.ParryState;
 import net.engarde.sound.CustomSounds;
 import net.engarde.util.EnGardeUtils;
@@ -51,7 +52,8 @@ public abstract class LivingEntityMixin{
                 user.getSoundSource(),
                 1.0F,
                 0.8F + level.getRandom().nextFloat() * 0.4F);
-        //TODO make this toggle when I make the config for no durability
-        getMainHandItem().hurtAndBreak(1, user, user.getEquipmentSlotForItem(getMainHandItem()));
+        if (!EnGardeConfig.loadConfig().disableEnchants) {
+            getMainHandItem().hurtAndBreak(1, user, user.getEquipmentSlotForItem(getMainHandItem()));
+        }
     }
 }

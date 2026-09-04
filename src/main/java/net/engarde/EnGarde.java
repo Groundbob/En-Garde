@@ -1,6 +1,7 @@
 package net.engarde;
 
 import net.engarde.client.EnGardeClient;
+import net.engarde.config.EnGardeConfig;
 import net.engarde.config.ParryItemConfig;
 import net.engarde.config.ParryItemManager;
 import net.engarde.networking.ItemConfigSyncPayload;
@@ -42,7 +43,10 @@ public class EnGarde implements ModInitializer {
 
 		LOGGER.info("Initializing En Garde!");
 
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			SERVER = server;
+			EnGardeConfig.reloadConfig();
+		});
 
 		ServerPlayerEvents.JOIN.register(player -> ServerPlayNetworking.send(player, new ItemConfigSyncPayload(PARRY_ITEM_CONFIGS)));
 

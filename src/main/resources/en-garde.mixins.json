@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "LivingEntityMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "durability.ItemStackMixin",
+    "durability.SetItemDamageFunctionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
