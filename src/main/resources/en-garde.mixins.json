@@ -26,6 +26,7 @@
     "ItemInHandLayerMixin",
     "ItemInHandRendererMixin",
     "LivingEntityRendererMixin",
+    "LocalPlayerMixin",
     "MinecraftMixin"
   ]
 }
