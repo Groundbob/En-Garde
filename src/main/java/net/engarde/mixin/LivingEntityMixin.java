@@ -52,7 +52,7 @@ public abstract class LivingEntityMixin{
                 user.getSoundSource(),
                 1.0F,
                 0.8F + level.getRandom().nextFloat() * 0.4F);
-        if (!EnGardeConfig.loadConfig().disableEnchants) {
+        if (!EnGardeConfig.loadConfig().disableDurability) {
             getMainHandItem().hurtAndBreak(1, user, user.getEquipmentSlotForItem(getMainHandItem()));
         }
     }

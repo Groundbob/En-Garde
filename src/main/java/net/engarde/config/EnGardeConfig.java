@@ -15,8 +15,11 @@ public class EnGardeConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve(EnGarde.MOD_ID + "/game_config.json").toFile();
     private static EnGardeConfig config;
-    
-    public boolean disableEnchants = true;
+
+    public boolean parryToggleable = true;
+
+    public boolean disableDurability = true;
+    public boolean defaultTridentLoyalty = true;
     
     public static synchronized EnGardeConfig loadConfig() {
         if (config != null) return config;

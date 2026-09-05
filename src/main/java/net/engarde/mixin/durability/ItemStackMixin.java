@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ItemStackMixin {
     @Inject(method = "processDurabilityChange", at = @At("HEAD"), cancellable = true)
     private void engarde$disableDurability(int amount, ServerLevel level, ServerPlayer player, CallbackInfoReturnable<Integer> cir) {
-        if (EnGardeConfig.loadConfig().disableEnchants) {
+        if (EnGardeConfig.loadConfig().disableDurability) {
             cir.setReturnValue(0);
         }
     }
 
     @Inject(method = "isDamageableItem", at = @At("HEAD"), cancellable = true)
     private void engarde$disableDurability(CallbackInfoReturnable<Boolean> cir) {
-        if (EnGardeConfig.loadConfig().disableEnchants) {
+        if (EnGardeConfig.loadConfig().disableDurability) {
             cir.setReturnValue(false);
         }
     }

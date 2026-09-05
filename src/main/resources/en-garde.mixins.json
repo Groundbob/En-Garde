@@ -5,6 +5,7 @@
   "mixins": [
     "LivingEntityMixin",
     "PlayerMixin",
+    "ThrownTridentMixin",
     "durability.ItemStackMixin",
     "durability.SetItemDamageFunctionMixin"
   ],
