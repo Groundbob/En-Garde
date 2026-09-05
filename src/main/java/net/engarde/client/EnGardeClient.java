@@ -2,6 +2,7 @@ package net.engarde.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
+import net.engarde.config.EnGardeConfig;
 import net.engarde.config.ParryItemConfig;
 import net.engarde.networking.ItemConfigSyncPayload;
 import net.engarde.networking.ParryPayload;
@@ -15,7 +16,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.ToggleKeyMapping;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -37,30 +37,55 @@ public class EnGardeClient implements ClientModInitializer {
         );
 
         KeyMapping parry = KeyMappingHelper.registerKeyMapping(
-                new ToggleKeyMapping(
+                new KeyMapping(
                         "key.en-garde.parry",
                         InputConstants.Type.KEYSYM,
                         InputConstants.KEY_R,
-                        CATEGORY,
-                        () -> true,
-                        false
+                        CATEGORY
                 ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (parry.consumeClick()) {
-                if (client.player != null) {
+            if (EnGardeConfig.loadConfig().parryToggleable) {
+                while (parry.consumeClick()) {
+                    if (client.player != null) {
 
-                    Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
-                    ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
-                    if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
-                        if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem())) {
-                            ParryState state = (ParryState) client.player;
-                            state.engarde$setParrying(!state.engarde$isParrying());
+                        Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
+                        ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
+                        if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
+                            if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem())) {
+                                ParryState state = (ParryState) client.player;
+                                state.engarde$setParrying(!state.engarde$isParrying());
 
-                            ClientPlayNetworking.send(new ParryPayload(true));
+                                ClientPlayNetworking.send(new ParryPayload(true));
+                            }
                         }
                     }
                 }
+            } else {
+                boolean isParryKeyDown = parry.isDown();
+                while (parry.consumeClick()) {
+                    if (client.player != null) {
+
+                        Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
+                        ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
+                        if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
+                            if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem())) {
+                                ParryState state = (ParryState) client.player;
+                                state.engarde$setParrying(true);
+
+                                ClientPlayNetworking.send(new ParryPayload(true));
+                            }
+                        }
+                    }
+                }
+                if (client.player != null) {
+                    ParryState state = (ParryState) client.player;
+                    if (!isParryKeyDown && state.engarde$isParrying()) {
+                        state.engarde$setParrying(false);
+                        ClientPlayNetworking.send(new ParryPayload(false));
+                    }
+                }
+
             }
 
             boolean isScreenOpen = client.gui.screen() != null;
