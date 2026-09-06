@@ -17,7 +17,6 @@ public class EnGardeConfig {
     private static EnGardeConfig config;
 
     public boolean parryToggleable = true;
-
     public boolean disableDurability = true;
     public boolean defaultTridentLoyalty = true;
     
@@ -50,6 +49,9 @@ public class EnGardeConfig {
             } catch (IOException | JsonSyntaxException e) {
                 EnGarde.LOGGER.error("Could not load config file", e);
             }
+        } else {
+            config = new EnGardeConfig();
+            saveConfig();
         }
         if (config == null) {
             config = new EnGardeConfig();

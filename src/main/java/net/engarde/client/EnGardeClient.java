@@ -12,21 +12,22 @@ import net.engarde.parry.ParryState;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class EnGardeClient implements ClientModInitializer {
+    public static ClientPacketListener CLIENT_PACKET_LISTENER;
     public static final Map<Identifier, ParryItemConfig> PARRY_ITEM_CONFIGS = new HashMap<>();
 
     private static boolean wasScreenOpen = false;
@@ -37,6 +38,11 @@ public class EnGardeClient implements ClientModInitializer {
         KeyMapping.Category CATEGORY = KeyMapping.Category.register(
                 Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "custom_category")
         );
+
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            CLIENT_PACKET_LISTENER = handler;
+            EnGardeConfig.reloadConfig();
+        });
 
         KeyMapping parry = KeyMappingHelper.registerKeyMapping(
                 new KeyMapping(

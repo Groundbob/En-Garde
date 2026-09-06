@@ -21,9 +21,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
 public class ItemInHandRendererMixin {
-    @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemModelResolver;updateForTopItem(Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/ItemOwner;I)V", shift = At.Shift.AFTER))
-    private void engarde$rotateHeavyItems(LivingEntity mob, ItemStack itemStack, ItemDisplayContext type, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
-        if (engarde$shouldRotate(mob, itemStack)) {
+    @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemModelResolver;updateForTopItem(Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/ItemOwner;I)V"))
+    private void engarde$rotateForParry(LivingEntity mob, ItemStack itemStack, ItemDisplayContext type, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
+        if (engarde$shouldRotateParry(mob, itemStack)) {
             poseStack.pushPose();
             poseStack.mulPose(Axis.ZP.rotationDegrees(mob.getMainArm() == HumanoidArm.RIGHT ? 50f : -50f));
             poseStack.mulPose(Axis.YP.rotationDegrees(mob.getMainArm() == HumanoidArm.RIGHT ? 90f : -90f));
@@ -32,7 +32,7 @@ public class ItemInHandRendererMixin {
     }
 
     @Unique
-    private static boolean engarde$shouldRotate(LivingEntity livingEntity, ItemStack itemStack) {
+    private static boolean engarde$shouldRotateParry(LivingEntity livingEntity, ItemStack itemStack) {
         Identifier itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
 
