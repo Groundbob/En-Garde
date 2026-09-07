@@ -6,9 +6,8 @@
     "LivingEntityMixin",
     "PlayerMixin",
     "ThrownTridentMixin",
-    "attributes.ItemStackMixin",
-    "durability.ItemStackMixin",
-    "durability.SetItemDamageFunctionMixin"
+    "ItemStackMixin",
+    "SetItemDamageFunctionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
