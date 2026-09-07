@@ -6,6 +6,7 @@
     "LivingEntityMixin",
     "PlayerMixin",
     "ThrownTridentMixin",
+    "attributes.ItemStackMixin",
     "durability.ItemStackMixin",
     "durability.SetItemDamageFunctionMixin"
   ],
