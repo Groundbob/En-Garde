@@ -40,7 +40,7 @@ public class EnGardeClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "custom_category")
         );
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+        ClientPlayConnectionEvents.JOIN.register((handler, _, _) -> {
             CLIENT_PACKET_LISTENER = handler;
             EnGardeConfig.reloadConfig();
         });
