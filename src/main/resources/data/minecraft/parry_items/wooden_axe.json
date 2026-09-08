@@ -1,12 +1,12 @@
 {
-  "template":"sword",
+  "template":"axe",
 
   "combat": {
-    "speed": 1.6,
+    "speed": 0.8,
     "damage": 7.0
   },
 
   "shield": {
-    "cooldown": 60
+    "cooldown": 110
   }
 }

@@ -1,0 +1,20 @@
+{
+  "parry_item": true,
+  "heavy_item": false,
+
+  "combat": {
+    "range": 3.3,
+    "speed": 0.9,
+    "damage": 9.0
+  },
+
+  "shield": {
+    "size": 60.0,
+    "cooldown": 100
+  },
+
+  "poses": {
+    "parry_pose": "single_handed",
+    "item_pose": "single_handed"
+  }
+}

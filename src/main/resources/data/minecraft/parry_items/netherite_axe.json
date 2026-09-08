@@ -1,0 +1,13 @@
+{
+  "template":"axe",
+
+  "combat": {
+    "range": 3.4,
+    "speed": 1.0,
+    "damage": 10.0
+  },
+
+  "shield": {
+    "cooldown": 90
+  }
+}

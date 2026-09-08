@@ -1,0 +1,7 @@
+{
+  "template":"pickaxe",
+
+  "combat": {
+    "damage": 5.0
+  }
+}
