@@ -9,7 +9,7 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 
 public record ParryPayload(boolean isParrying) implements CustomPacketPayload {
-    public static final Identifier ID = Identifier.fromNamespaceAndPath(EnGarde.MOD_ID, "client_parry");
+    public static final Identifier ID = EnGarde.id("client_parry");
 
     public static final CustomPacketPayload.Type<ParryPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
