@@ -2,6 +2,7 @@ package net.engarde.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.engarde.EnGarde;
+import net.engarde.config.CustomTooltips;
 import net.engarde.config.EnGardeConfig;
 import net.engarde.config.ParryItemConfig;
 import net.engarde.networking.ItemConfigSyncPayload;
@@ -137,5 +138,6 @@ public class EnGardeClient implements ClientModInitializer {
             PARRY_ITEM_CONFIGS.putAll(payload.itemConfigs());
         })));
 
+        CustomTooltips.register();
     }
 }
