@@ -1,8 +1,10 @@
-package net.engarde.mixin;
+package net.engarde.mixin.tridentsfix;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.engarde.config.EnGardeConfig;
 import net.engarde.reworks.TridentSlotAccess;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.ThrownTrident;
@@ -55,5 +57,16 @@ public abstract class ThrownTridentMixin implements TridentSlotAccess {
     @Unique
     public boolean engarde$isSourceOffhand() {
         return this.engarde$sourceOffhand;
+    }
+
+    /* TRIDENT DAMAGE BUFF */
+
+    @ModifyExpressionValue(method = "onHitEntity", at = @At(value = "CONSTANT", args = "floatValue=8.0F"))
+    private float engarde$tridentDamageBuff(float original) {
+        Entity owner = ((ThrownTrident) (Object) this).getOwner();
+        if (EnGardeConfig.loadConfig().tridentDamageBuff && owner instanceof Player) {
+            return 10.0F;
+        }
+        return original;
     }
 }

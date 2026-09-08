@@ -3,12 +3,12 @@
   "package": "net.engarde.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "AbstractArrowMixin",
+    "tridentsfix.AbstractArrowMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerMixin",
     "SetItemDamageFunctionMixin",
-    "ThrownTridentMixin"
+    "tridentsfix.ThrownTridentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

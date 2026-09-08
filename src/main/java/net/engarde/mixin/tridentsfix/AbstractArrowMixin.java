@@ -1,4 +1,4 @@
-package net.engarde.mixin;
+package net.engarde.mixin.tridentsfix;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

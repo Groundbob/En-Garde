@@ -18,7 +18,9 @@ public class EnGardeConfig {
 
     public boolean parryToggleable = true;
     public boolean disableDurability = true;
+
     public boolean defaultTridentLoyalty = true;
+    public boolean tridentDamageBuff = true;
     
     public static synchronized EnGardeConfig loadConfig() {
         if (config != null) return config;
