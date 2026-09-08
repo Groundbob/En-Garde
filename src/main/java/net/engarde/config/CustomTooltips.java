@@ -28,9 +28,9 @@ public class CustomTooltips {
 
                 int insertIndex = Math.min(1 + enchantmentLineCount, lines.size());
                 if (!itemConfig.heavyItem) {
-                    lines.add(insertIndex, Component.literal("Parry Item").withStyle(ChatFormatting.DARK_GREEN));
+                    lines.add(insertIndex, Component.translatable("itemTooltip.en-garde.parry_item").withStyle(ChatFormatting.DARK_GREEN));
                 } else {
-                    lines.add(insertIndex, Component.literal("Heavy Parry Item").withStyle(ChatFormatting.DARK_AQUA));
+                    lines.add(insertIndex, Component.translatable("itemTooltip.en-garde.heavy_parry_item").withStyle(ChatFormatting.DARK_AQUA));
                 }
             }
         }));

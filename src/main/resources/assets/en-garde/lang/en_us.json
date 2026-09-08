@@ -3,5 +3,8 @@
   "key.en-garde.parry": "Parry",
 
   "sounds.en-garde.parry_clang": "Parry Clang",
-  "sounds.en-garde.heavy_parry_clang": "Heavy Parry Clang"
+  "sounds.en-garde.heavy_parry_clang": "Heavy Parry Clang",
+
+  "itemTooltip.en-garde.parry_item": "Parry Item",
+  "itemTooltip.en-garde.heavy_parry_item": "Heavy Parry Item"
 }
