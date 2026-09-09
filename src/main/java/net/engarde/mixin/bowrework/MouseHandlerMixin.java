@@ -20,7 +20,7 @@ public class MouseHandlerMixin{
         LocalPlayer player = Minecraft.getInstance().player;
         if (EnGardeConfig.loadConfig().enableBowRework) {
             if (player != null && player.isUsingItem() && player.getActiveItem().getItem() instanceof BowItem && player instanceof BowPullState pullState) {
-                pullState.engarde$setPullState(pullState.engarde$getPullState() - (int) yoffset);
+                pullState.engarde$setPullState(Math.clamp(pullState.engarde$getPullState() - (int) yoffset, 0, 20));
                 int newPullState = pullState.engarde$getPullState();
                 ClientPlayNetworking.send(new BowPullPayload(newPullState));
                 ci.cancel();

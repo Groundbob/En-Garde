@@ -1,5 +1,6 @@
 package net.engarde.mixin.bowrework;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.engarde.config.EnGardeConfig;
 import net.engarde.reworks.bow.BowPullState;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -42,4 +44,43 @@ public class BowItemMixin extends Item{
             return pullState.engarde$getPullState();
         } else return timeHeld;
     }
+
+    @ModifyExpressionValue(method = "releaseUsing" , at = @At(value = "CONSTANT", args = "doubleValue=0.1"))
+    private double engarde$increaseBowThreshold(double original) {
+        if (EnGardeConfig.loadConfig().enableBowRework) {
+            return 0.3;
+        }
+        return original;
+    }
+
+    /* ACCURACY FIX */
+
+    @Unique
+    private float engarde$lastPower;
+
+    @ModifyVariable(method = "releaseUsing", at = @At(value = "STORE"), name = "pow")
+    private float engarde$capturePower(float pow) {
+        this.engarde$lastPower = pow;
+        return pow;
+    }
+
+    @ModifyExpressionValue(method = "releaseUsing", at = @At(value = "CONSTANT", args = "floatValue=1.0", ordinal =0))
+    private float engarde$bowAccuracy(float original) {
+        if (EnGardeConfig.loadConfig().enableBowRework) {
+            return 2 - 2* this.engarde$lastPower * this.engarde$lastPower;
+        }
+        return original;
+    }
+
+    /* POWER BUFF */
+
+    @ModifyExpressionValue(method = "releaseUsing", at = @At(value = "CONSTANT", args = "floatValue=3.0"))
+    private float engarde$bowPower(float original) {
+        if (EnGardeConfig.loadConfig().enableBowRework) {
+            return 6 * engarde$lastPower;
+        }
+        return original;
+    }
+
+    //TODO Remove power enchantment
 }

@@ -2,8 +2,12 @@ package net.engarde.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.engarde.config.EnGardeConfig;
 import net.engarde.parry.ParryState;
+import net.engarde.reworks.bow.BowPullState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.InteractionHand;
@@ -12,10 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
+
+    /* ENGARDE PARRY */
 
     @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", ordinal = 1))
     private void engarde$firstPersonParryPose(AbstractClientPlayer player, float frameInterp, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
@@ -27,5 +34,16 @@ public abstract class ItemInHandRendererMixin {
             poseStack.mulPose(Axis.YP.rotationDegrees(90 * direction));
             poseStack.mulPose(Axis.XP.rotationDegrees(-15));
         }
+    }
+
+    /* BOW SHAKE REDUCTION */
+
+    @ModifyArg(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 6), index = 1)
+    private float engarde$shakeReduction(float y) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (EnGardeConfig.loadConfig().enableBowRework && player instanceof BowPullState pullState) {
+            return (float) (y * (1.2- Math.pow((float) pullState.engarde$getPullState() /20, 6)));
+        }
+        return y;
     }
 }
