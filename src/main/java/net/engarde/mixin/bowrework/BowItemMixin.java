@@ -77,7 +77,7 @@ public class BowItemMixin extends Item{
     @ModifyExpressionValue(method = "releaseUsing", at = @At(value = "CONSTANT", args = "floatValue=3.0"))
     private float engarde$bowPower(float original) {
         if (EnGardeConfig.loadConfig().enableBowRework) {
-            return 6 * engarde$lastPower;
+            return 4.5f * engarde$lastPower;
         }
         return original;
     }
