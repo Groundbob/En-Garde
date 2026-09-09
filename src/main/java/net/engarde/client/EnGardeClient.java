@@ -5,11 +5,13 @@ import net.engarde.EnGarde;
 import net.engarde.config.CustomTooltips;
 import net.engarde.config.EnGardeConfig;
 import net.engarde.config.ParryItemConfig;
+import net.engarde.networking.BowPullSyncPayload;
 import net.engarde.networking.ItemConfigSyncPayload;
 import net.engarde.networking.ParryPayload;
 import net.engarde.networking.ParrySyncPayload;
 import net.engarde.parry.ParryHudElement;
 import net.engarde.parry.ParryState;
+import net.engarde.reworks.bow.BowPullState;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -136,6 +138,14 @@ public class EnGardeClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(ItemConfigSyncPayload.TYPE, ((payload, context) -> context.client().execute(() -> {
             PARRY_ITEM_CONFIGS.clear();
             PARRY_ITEM_CONFIGS.putAll(payload.itemConfigs());
+        })));
+
+        ClientPlayNetworking.registerGlobalReceiver(BowPullSyncPayload.TYPE, ((payload, context) -> context.client().execute(() -> {
+            if (context.client().level == null) return;
+            var entity = Objects.requireNonNull(context.client().level).getEntity(payload.entityId());
+            if (entity instanceof BowPullState pullState) {
+                pullState.engarde$setPullState(payload.pullState());
+            }
         })));
 
         CustomTooltips.register();

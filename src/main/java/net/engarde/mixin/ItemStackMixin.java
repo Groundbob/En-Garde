@@ -152,4 +152,7 @@ public abstract class ItemStackMixin {
             }
         }
     }
+
+    /* BOW REWORK */
+
 }

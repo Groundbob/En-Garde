@@ -4,10 +4,9 @@ import net.engarde.client.EnGardeClient;
 import net.engarde.config.EnGardeConfig;
 import net.engarde.config.ParryItemConfig;
 import net.engarde.config.ParryItemManager;
-import net.engarde.networking.ItemConfigSyncPayload;
-import net.engarde.networking.ParryPayload;
-import net.engarde.networking.ParrySyncPayload;
+import net.engarde.networking.*;
 import net.engarde.parry.ParryState;
+import net.engarde.reworks.bow.BowPullState;
 import net.engarde.sound.CustomSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -23,6 +22,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +53,8 @@ public class EnGarde implements ModInitializer {
 		PayloadTypeRegistry.serverboundPlay().register(ParryPayload.TYPE, ParryPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ParrySyncPayload.TYPE, ParrySyncPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ItemConfigSyncPayload.TYPE, ItemConfigSyncPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(BowPullPayload.TYPE, BowPullPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(BowPullSyncPayload.TYPE, BowPullSyncPayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(ParryPayload.TYPE, (payload, context) -> context.server().execute(() -> {
             if (context.player() instanceof ParryState parryStatePlayer) {
@@ -80,9 +82,24 @@ public class EnGarde implements ModInitializer {
             }
         }));
 
+		ServerPlayNetworking.registerGlobalReceiver(BowPullPayload.TYPE, (payload, context) -> context.server().execute(() -> {
+			if (context.player() instanceof BowPullState bowState) {
+				ServerPlayer serverPlayer = context.player();
+
+				Item mainHandItem = serverPlayer.getMainHandItem().getItem();
+				if (!(mainHandItem instanceof BowItem)) return;
+
+				bowState.engarde$setPullState(payload.pullState());
+				broadcastBowPullState(serverPlayer, payload.pullState());
+			}
+		}));
+
 		EntityTrackingEvents.START_TRACKING.register((entity, player) -> {
 			if (entity instanceof ParryState parryState && parryState.engarde$isParrying()) {
 				ServerPlayNetworking.send(player, new ParrySyncPayload(entity.getId(), true));
+			}
+			if (entity instanceof BowPullState bowPullState && bowPullState.engarde$getPullState() != 0) {
+				ServerPlayNetworking.send(player, new BowPullSyncPayload(entity.getId(), bowPullState.engarde$getPullState()));
 			}
 		});
 
@@ -93,6 +110,13 @@ public class EnGarde implements ModInitializer {
 
 	public static void broadcastParryState(ServerPlayer player, boolean isParrying) {
 		ParrySyncPayload sync = new ParrySyncPayload(player.getId(), isParrying);
+		for (ServerPlayer tracker : PlayerLookup.tracking(player)) {
+			ServerPlayNetworking.send(tracker, sync);
+		}
+	}
+
+	public static void broadcastBowPullState(ServerPlayer player, int pullState) {
+		BowPullSyncPayload sync = new BowPullSyncPayload(player.getId(), pullState);
 		for (ServerPlayer tracker : PlayerLookup.tracking(player)) {
 			ServerPlayNetworking.send(tracker, sync);
 		}

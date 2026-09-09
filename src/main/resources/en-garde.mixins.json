@@ -3,11 +3,12 @@
   "package": "net.engarde.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "tridentsfix.AbstractArrowMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerMixin",
     "SetItemDamageFunctionMixin",
+    "bowrework.BowItemMixin",
+    "tridentsfix.AbstractArrowMixin",
     "tridentsfix.ThrownTridentMixin"
   ],
   "injectors": {
@@ -28,6 +29,8 @@
     "ItemInHandRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "bowrework.AbstractClientPlayerMixin",
+    "bowrework.MouseHandlerMixin"
   ]
 }

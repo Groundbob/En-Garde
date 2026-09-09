@@ -21,6 +21,8 @@ public class EnGardeConfig {
 
     public boolean defaultTridentLoyalty = true;
     public boolean tridentDamageBuff = true;
+
+    public boolean enableBowRework = true;
     
     public static synchronized EnGardeConfig loadConfig() {
         if (config != null) return config;

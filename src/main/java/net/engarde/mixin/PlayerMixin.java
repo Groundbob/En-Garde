@@ -3,6 +3,7 @@ package net.engarde.mixin;
 import net.engarde.EnGarde;
 import net.engarde.parry.AttackStrengthAccessor;
 import net.engarde.parry.ParryState;
+import net.engarde.reworks.bow.BowPullState;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin implements ParryState, AttackStrengthAccessor {
+public abstract class PlayerMixin implements ParryState, AttackStrengthAccessor, BowPullState {
 
     @Shadow
     public abstract float getAttackStrengthScale(float a);
@@ -69,5 +70,18 @@ public abstract class PlayerMixin implements ParryState, AttackStrengthAccessor 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAttackStrengthScale(F)F", shift = At.Shift.AFTER))
     private void engarde$deflectAttackCheck(Entity entity, CallbackInfo ci) {
         this.engarde$setLastAttackStrength(getAttackStrengthScale(0.5f));
+    }
+
+    @Unique
+    private int engarde$BowPullState = 0;
+
+    @Override
+    public int engarde$getPullState() {
+        return engarde$BowPullState;
+    }
+
+    @Override
+    public void engarde$setPullState(int pullState) {
+        engarde$BowPullState = pullState;
     }
 }
