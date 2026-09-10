@@ -63,7 +63,7 @@ public class EnGardeClient implements ClientModInitializer {
                         Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
                         ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
                         if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
-                            if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem())) {
+                            if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem()) && !client.player.isUsingItem()) {
                                 ParryState state = (ParryState) client.player;
                                 state.engarde$setParrying(!state.engarde$isParrying());
 
@@ -80,7 +80,7 @@ public class EnGardeClient implements ClientModInitializer {
                         Identifier itemId = BuiltInRegistries.ITEM.getKey(client.player.getMainHandItem().getItem());
                         ParryItemConfig itemConfig = PARRY_ITEM_CONFIGS.get(itemId);
                         if (itemConfig != null && itemConfig.parryItem != null && itemConfig.parryItem) {
-                            if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem())) {
+                            if (!client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem()) && !client.player.isUsingItem()) {
                                 ParryState state = (ParryState) client.player;
                                 state.engarde$setParrying(true);
 
