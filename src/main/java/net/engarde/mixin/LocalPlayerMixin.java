@@ -36,4 +36,12 @@ public class LocalPlayerMixin {
         if (minecraft.player instanceof ParryState parryState && parryState.engarde$isParrying()) return true;
         return original;
     }
+
+    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
+    private void engarde$preventDrop(boolean all, CallbackInfoReturnable<Boolean> cir) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player instanceof ParryState parryState && parryState.engarde$isParrying()) {
+            cir.cancel();
+        }
+    }
 }

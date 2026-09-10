@@ -55,7 +55,7 @@ public class EnGardeClient implements ClientModInitializer {
                         CATEGORY
                 ));
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (EnGardeConfig.loadConfig().parryToggleable) {
                 while (parry.consumeClick()) {
                     if (client.player != null) {
