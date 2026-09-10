@@ -14,10 +14,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
@@ -36,7 +35,7 @@ public abstract class ItemInHandRendererMixin {
         }
     }
 
-    /* BOW SHAKE REDUCTION */
+    /* BOW SHAKE */
 
     @ModifyArg(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 6), index = 1)
     private float engarde$shakeReduction(float y) {
@@ -45,5 +44,27 @@ public abstract class ItemInHandRendererMixin {
             return (float) (y * (1.2- Math.pow((float) pullState.engarde$getPullState() /20, 6)));
         }
         return y;
+    }
+
+    /* BOW ZOOM */
+
+    @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal =1), slice = @Slice(from = @At(value = "CONSTANT", args = "floatValue=-13.935"), to = @At(value = "CONSTANT", args = "floatValue=-55.0")))
+    private void engarde$powerToPullTranslate(Args args) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (EnGardeConfig.loadConfig().enableBowRework && player instanceof BowPullState pullState) {
+            float pullPower = pullState.engarde$getPullState() / 20f;
+            args.set(0, pullPower * 0.0F);
+            args.set(1, pullPower * 0.0F);
+            args.set(2, pullPower * 0.04F);
+        }
+    }
+
+    @ModifyArgs(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal =0), slice = @Slice(from = @At(value = "CONSTANT", args = "floatValue=-13.935"), to = @At(value = "CONSTANT", args = "floatValue=-55.0")))
+    private void engarde$powerToPullScale(Args args) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (EnGardeConfig.loadConfig().enableBowRework && player instanceof BowPullState pullState) {
+            float pullPower = pullState.engarde$getPullState() / 20f;
+            args.set(2, 1.0F + pullPower * 0.2F);
+        }
     }
 }
