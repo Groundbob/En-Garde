@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,9 +30,15 @@ public abstract class ItemInHandRendererMixin {
         if (hand != InteractionHand.MAIN_HAND) return;
 
         if (player instanceof ParryState parryState && parryState.engarde$isParrying()) {
-            poseStack.mulPose(Axis.ZP.rotationDegrees(50 * direction));
-            poseStack.mulPose(Axis.YP.rotationDegrees(90 * direction));
-            poseStack.mulPose(Axis.XP.rotationDegrees(-15));
+            if (!itemStack.getItem().equals(Items.TRIDENT)) {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(50 * direction));
+                poseStack.mulPose(Axis.YP.rotationDegrees(90 * direction));
+                poseStack.mulPose(Axis.XP.rotationDegrees(-15));
+            } else {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(10 * direction));
+                poseStack.mulPose(Axis.YP.rotationDegrees(90 * direction));
+                poseStack.mulPose(Axis.XP.rotationDegrees(-15));
+            }
         }
     }
 
