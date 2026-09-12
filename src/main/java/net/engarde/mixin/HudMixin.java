@@ -18,6 +18,8 @@ public class HudMixin {
     @Final
     private Minecraft minecraft;
 
+    /* CANCEL ATTACK INDICATOR */
+
     @Inject(method = "extractCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;attackIndicator()Lnet/minecraft/client/OptionInstance;", shift = At.Shift.AFTER), cancellable = true)
     private void engarde$cancelAttackIndicator(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (this.minecraft.player instanceof ParryState parryState && parryState.engarde$isParrying()) ci.cancel();

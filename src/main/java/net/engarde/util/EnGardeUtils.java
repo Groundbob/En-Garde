@@ -5,11 +5,14 @@ import net.engarde.config.ParryItemConfig;
 import net.engarde.data.EnGardeDamageTypeTags;
 import net.engarde.data.EnGardeItemTagProvider;
 import net.engarde.parry.AttackStrengthAccessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -55,5 +58,31 @@ public class EnGardeUtils {
             float strength = ((AttackStrengthAccessor) player).engarde$getLastAttackStrength();
             return strength > 0.9f;
         }
+    }
+
+    public static boolean disablesOffhand() {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player != null) {
+            Identifier itemId = BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem());
+            ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
+            if (itemConfig != null && itemConfig.heavyItem != null) {
+                return itemConfig.heavyItem;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isHeavyItemSlot(Slot slot) {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(slot.getItem().getItem());
+        ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
+        if (player != null && !player.getOffhandItem().isEmpty()) {
+            if (itemConfig != null && itemConfig.heavyItem != null) {
+                return itemConfig.heavyItem;
+            }
+        }
+        return false;
     }
 }

@@ -23,6 +23,8 @@ public class EnGardeConfig {
     public boolean tridentDamageBuff = true;
 
     public boolean enableBowRework = true;
+
+    public boolean maceRework = true;
     
     public static synchronized EnGardeConfig loadConfig() {
         if (config != null) return config;

@@ -8,6 +8,7 @@
     "PlayerMixin",
     "SetItemDamageFunctionMixin",
     "bowrework.BowItemMixin",
+    "macerework.MaceItemMixin",
     "tridentsfix.AbstractArrowMixin",
     "tridentsfix.ThrownTridentMixin"
   ],
@@ -18,6 +19,7 @@
     "requireAnnotations": true
   },
   "client": [
+    "AbstractContainerScreenMixin",
     "ArmedEntityRenderStateMixin",
     "AvatarRendererMixin",
     "AvatarRenderStateMixin",
