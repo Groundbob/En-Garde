@@ -85,4 +85,10 @@ public class EnGardeUtils {
         }
         return false;
     }
+
+    public static boolean isHeavyItem(ItemStack itemStack) {
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
+        ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
+        return itemConfig != null && itemConfig.heavyItem != null && itemConfig.heavyItem;
+    }
 }
