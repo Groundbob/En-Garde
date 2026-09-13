@@ -7,6 +7,7 @@
     "LivingEntityMixin",
     "PlayerMixin",
     "SetItemDamageFunctionMixin",
+    "SlotMixin",
     "bowrework.BowItemMixin",
     "macerework.MaceItemMixin",
     "tridentsfix.AbstractArrowMixin",
@@ -32,6 +33,7 @@
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
     "MinecraftMixin",
+    "ScrollWheelHandlerMixin",
     "bowrework.AbstractClientPlayerMixin",
     "bowrework.MouseHandlerMixin",
     "bowrework.UseDurationMixin"
