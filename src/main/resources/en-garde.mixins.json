@@ -3,6 +3,8 @@
   "package": "net.engarde.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "AbstractContainerMenuMixin",
+    "InventoryMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerMixin",

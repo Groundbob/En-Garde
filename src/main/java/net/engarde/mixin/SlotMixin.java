@@ -2,6 +2,7 @@ package net.engarde.mixin;
 
 import net.engarde.client.EnGardeClient;
 import net.engarde.config.ParryItemConfig;
+import net.engarde.util.EnGardeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -39,7 +40,7 @@ public abstract class SlotMixin {
             Identifier itemIdHand = BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem());
             ParryItemConfig itemConfigHand = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemIdHand);
             if ((this.container instanceof Inventory && this.getContainerSlot() == 40 && itemConfigHand != null && itemConfigHand.heavyItem != null && itemConfigHand.heavyItem)
-                    || (this.container instanceof Inventory && this.getContainerSlot() == player.getInventory().getSelectedSlot() && itemConfigMouse != null && itemConfigMouse.heavyItem != null && itemConfigMouse.heavyItem && !player.getOffhandItem().isEmpty())
+                    || (this.container instanceof Inventory && this.getContainerSlot() == player.getInventory().getSelectedSlot() && EnGardeUtils.isHeavyItem(itemStack) && !player.getOffhandItem().isEmpty())
             ) {
                 cir.setReturnValue(false);
             }
