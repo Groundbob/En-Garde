@@ -4,10 +4,13 @@ import net.engarde.EnGarde;
 import net.engarde.parry.AttackStrengthAccessor;
 import net.engarde.parry.ParryState;
 import net.engarde.reworks.bow.BowPullState;
+import net.engarde.util.EnGardeUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -83,5 +86,21 @@ public abstract class PlayerMixin implements ParryState, AttackStrengthAccessor,
     @Override
     public void engarde$setPullState(int pullState) {
         engarde$BowPullState = pullState;
+    }
+
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void engarde$preventOffhandHeavyConflict(CallbackInfo ci) {
+        Player player = (Player) (Object) this;
+        ItemStack offhandItemStack = player.getOffhandItem();
+        if (offhandItemStack.isEmpty()) return;
+
+        ItemStack mainhandItemStack = player.getMainHandItem();
+        if (!EnGardeUtils.isHeavyItem(mainhandItemStack)) return;
+
+        player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+        if (!player.getInventory().add(offhandItemStack)) {
+            player.drop(offhandItemStack, false);
+        }
     }
 }
