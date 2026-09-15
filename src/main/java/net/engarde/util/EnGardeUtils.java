@@ -48,6 +48,17 @@ public class EnGardeUtils {
         }
     }
 
+    public static void attackerHeavyStun(LivingEntity attacker) {
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(attacker.getMainHandItem().getItem());
+        ParryItemConfig itemConfig = EnGardeClient.PARRY_ITEM_CONFIGS.get(itemId);
+
+        int parryCooldownInTicks = (itemConfig != null && itemConfig.shield != null && itemConfig.shield.cooldown() != null) ? itemConfig.shield.cooldown() : 100;
+
+        if (attacker instanceof Player player) {
+            player.getCooldowns().addCooldown(attacker.getMainHandItem(), parryCooldownInTicks * 5);
+        }
+    }
+
     public static boolean attackDisablesParry(DamageSource source) {
         if (!(source.getEntity() instanceof Player player)) return true;
 

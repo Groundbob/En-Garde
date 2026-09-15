@@ -35,6 +35,11 @@ public abstract class LivingEntityMixin{
 
                     if (EnGardeUtils.attackDisablesParry(source)) {
                         onParry(level, Objects.requireNonNull(this.asLivingEntity()));
+
+                        boolean heavyParry = EnGardeUtils.isHeavyItem(getMainHandItem());
+                        if (source.getEntity() instanceof LivingEntity attacker && heavyParry) {
+                            EnGardeUtils.attackerHeavyStun(attacker);
+                        }
                         EnGardeUtils.parryCooldown(Objects.requireNonNull(this.asLivingEntity()));
                     }
                 }
