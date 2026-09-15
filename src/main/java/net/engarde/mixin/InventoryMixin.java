@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class InventoryMixin {
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
     private void engarde$heavyPickupFix(int slot, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
-        if (slot != -1) return;
         if (itemStack.isEmpty()) return;
 
         Inventory inventory = (Inventory) (Object) this;
@@ -25,14 +24,16 @@ public abstract class InventoryMixin {
         if (!EnGardeUtils.isHeavyItem(itemStack)) return;
 
         int slotException = inventory.getSelectedSlot();
-        int originalCount = itemStack.getCount();
+        boolean resolvedToMainhand = (slot == slotException);
+
+        if (slot != -1 && slot != slotException) return;
 
         for (int i = 0; i < 36 && !itemStack.isEmpty(); i++) {
             if (i == slotException) continue;
             ItemStack slotItemStack = inventory.getItem(i);
             if (!slotItemStack.isEmpty() && slotItemStack.isStackable() && ItemStack.isSameItemSameComponents(slotItemStack, itemStack)) {
                 int room = inventory.getMaxStackSize(slotItemStack) - slotItemStack.getCount();
-                if (room < 0) {
+                if (room > 0) {
                     int moved = Math.min(room, itemStack.getCount());
                     slotItemStack.grow(moved);
                     itemStack.shrink(moved);
@@ -48,7 +49,13 @@ public abstract class InventoryMixin {
             }
         }
 
-        cir.setReturnValue(itemStack.getCount() < originalCount);
+        if (!itemStack.isEmpty() && resolvedToMainhand) {
+            ItemStack dropStack = itemStack.copy();
+            itemStack.shrink(itemStack.getCount());
+            player.drop(dropStack, false);
+        }
+
+        cir.setReturnValue(itemStack.isEmpty());
         cir.cancel();
     }
 }
